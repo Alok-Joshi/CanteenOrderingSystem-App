@@ -1,13 +1,11 @@
+import 'package:canteen_ordering_app/controllers/authentication_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class LoginPage extends StatefulWidget {
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
+class LoginPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final authcon = Get.find<AuthenticationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 48.0),
               ElevatedButton(
                 child: Text('Login'),
-                onPressed: () {},
+                onPressed: () { authcon.SignIn(emailController.text, passwordController.text);  }
               ),
             ],
           ),
