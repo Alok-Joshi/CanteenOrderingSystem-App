@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "811791488279",
+    "project_id": "vihwafoodie",
+    "storage_bucket": "vihwafoodie.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:811791488279:android:97aed2df57cf7fffd49352",
+        "android_client_info": {
+          "package_name": "com.example.canteen_ordering_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "811791488279-7u9tqponfdeqf3ruqi13oc41itubvn39.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhN3WVl3e7msej1v8UKdk7UeVe9s6-tE4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "811791488279-7u9tqponfdeqf3ruqi13oc41itubvn39.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "811791488279-5d8ohdmf60qc5lm9g6srhsbsfaspeldk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.canteenOrderingApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

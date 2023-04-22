@@ -17,11 +17,11 @@ class Canteen {
     required this.isOpen,
   });
 
-  factory Canteen.fromFirestore(DocumentSnapshot documentSnapshot) {
-    Map<String, dynamic> data = documentSnapshot.data();
+  factory Canteen.fromFirestore(DocumentSnapshot<Map<String,dynamic>> documentSnapshot) {
+    Map<String, dynamic>? data = documentSnapshot.data();
     final currentTime = DateTime.now();
 
-    bool is_open = currentTime.isAfter(data['canteen_start_time'].toDate()) && currentTime.isAfter(data['canteen_end_time']);
+    bool is_open = currentTime.isAfter(data!['canteen_start_time'].toDate()) && currentTime.isAfter(data['canteen_end_time']);
     return Canteen(
       canteenId: documentSnapshot.id,
       ownerId: data['owner_id'],
@@ -37,8 +37,8 @@ class Canteen {
       'canteen_id': canteenId,
       'owner_id': ownerId,
       'canteen_name': canteenName,
-      'canteen_start_time': Timestamp.fromDate(canteenStartTime),
-      'canteen_end_time': Timestamp.fromDate(canteenEndTime),
+      'canteen_start_time': Timestamp.fromDate(canteenStartTime!),
+      'canteen_end_time': Timestamp.fromDate(canteenEndTime!),
     };
   }
 }

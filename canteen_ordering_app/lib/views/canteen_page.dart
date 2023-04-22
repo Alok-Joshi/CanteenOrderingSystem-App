@@ -6,14 +6,7 @@ import 'canteen_card.dart';
 
 class CanteenListPage extends StatelessWidget {
   final CanteenController _canteenController = Get.find<CanteenController>();
-  Future<List<Canteen>>? canteens;
 
-
-  void initState(){
-
-    canteens =_canteenController.getCanteens();
-
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +14,7 @@ class CanteenListPage extends StatelessWidget {
         title: Text('Canteen List'),
       ),
       body: FutureBuilder(
-        future: canteens,
+        future:_canteenController.getCanteens(),
         builder: (BuildContext context, AsyncSnapshot<List<Canteen>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // Show a progress indicator if still waiting for data to load
@@ -45,9 +38,10 @@ class CanteenListPage extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 final canteen = snapshot.data![index];
                 return CanteenCard(
+                  canteen_id: canteen.canteenId!,
                   canteenName: canteen.canteenName!,
                   canteenTimings:
-                      '${canteen.canteenStartTime} - ${canteen.canteenEndTime}',
+                      '${canteen.canteenStartTime!.hour} - ${canteen.canteenEndTime!.hour}',
                   isOpen: canteen.isOpen!,
                 );
               },

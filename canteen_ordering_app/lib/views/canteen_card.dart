@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CanteenCard extends StatelessWidget {
+  final String canteen_id;
   final String canteenName;
   final String canteenTimings;
   final bool isOpen;
 
   CanteenCard({
+    required this.canteen_id,
     required this.canteenName,
     required this.canteenTimings,
     required this.isOpen,

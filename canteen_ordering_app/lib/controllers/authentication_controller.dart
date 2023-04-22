@@ -6,7 +6,7 @@ class AuthenticationController extends GetxController {
 
      Rx<User?> _userFromFirebase = Rx<User?>(null);
      final auth = FirebaseAuth.instance;
-     Future SignIn(String email, String password)
+     Future SignIn(String email, String password) async 
      {
             UserCredential userCredential = await auth.signInWithEmailAndPassword( email: email, password: password );
 
@@ -37,6 +37,10 @@ class AuthenticationController extends GetxController {
 
 }
 
-//1) canteen model [canteen_id, owner_id, canteen_name, canteen_start_time, canteen_end_time]
-//2) Now make a controller for canteens
-//3) use Init method in widget to change call controller canteen name
+
+//now visualize the menu page. It will have a navigation bar. One page will show the menu, one page will show drinks, and one page will show the 
+// menu: [canteen_id, menu: list[food_items]]
+// food_item: [name, type [drink: food], price]
+// create a menu item card with 2 buttons . Should display the two things: Name, quantity, and price. 
+// create a cart 
+
