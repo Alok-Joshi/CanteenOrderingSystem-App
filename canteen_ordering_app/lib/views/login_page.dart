@@ -1,4 +1,5 @@
 import 'package:canteen_ordering_app/controllers/authentication_controller.dart';
+import 'package:canteen_ordering_app/controllers/canteen_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -44,7 +45,10 @@ class LoginPage extends StatelessWidget {
               SizedBox(height: 48.0),
               ElevatedButton(
                 child: Text('Login'),
-                onPressed: () { authcon.SignIn(emailController.text, passwordController.text);  }
+                onPressed: () {
+                   authcon.SignIn(emailController.text, passwordController.text);
+                   Get.put(CanteenController());  }
+
               ),
             ],
           ),

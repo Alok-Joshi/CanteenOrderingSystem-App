@@ -1,48 +1,61 @@
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
+import 'package:canteen_ordering_app/controllers/canteen_controller.dart';
+import 'package:canteen_ordering_app/models/canteen.dart';
 import 'canteen_card.dart';
 
 class CanteenListPage extends StatelessWidget {
-  final List<Map<String, dynamic>> canteens = [
-    {
-      'name': 'Canteen A',
-      'timings': '8:00 AM - 8:00 PM',
-      'isOpen': true,
-    },
-    {
-      'name': 'Canteen B',
-      'timings': '9:00 AM - 7:00 PM',
-      'isOpen': false,
-    },
-    {
-      'name': 'Canteen C',
-      'timings': '10:00 AM - 6:00 PM',
-      'isOpen': true,
-    },
-    {
-      'name': 'Canteen D',
-      'timings': '7:00 AM - 9:00 PM',
-      'isOpen': true,
-    },
-  ];
+  final CanteenController _canteenController = Get.find<CanteenController>();
+  Future<List<Canteen>>? canteens;
 
+
+  void initState(){
+
+    canteens =_canteenController.getCanteens();
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Canteen List'),
       ),
-      body: ListView.builder(
-        itemCount: canteens.length,
-        itemBuilder: (BuildContext context, int index) {
-          final canteen = canteens[index];
-          return CanteenCard(
-            canteenName: canteen['name'],
-            canteenTimings: canteen['timings'],
-            isOpen: canteen['isOpen'],
-          );
+      body: FutureBuilder(
+        future: canteens,
+        builder: (BuildContext context, AsyncSnapshot<List<Canteen>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Show a progress indicator if still waiting for data to load
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            // Handle any errors here
+            return Center(
+              child: Text('Error: ${snapshot.error.toString()}'),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            // Show a message if there are no canteens to display
+            return Center(
+              child: Text('No canteens found.'),
+            );
+          } else {
+            // Display the list of canteens using the CanteenCard widget
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (BuildContext context, int index) {
+                final canteen = snapshot.data![index];
+                return CanteenCard(
+                  canteenName: canteen.canteenName!,
+                  canteenTimings:
+                      '${canteen.canteenStartTime} - ${canteen.canteenEndTime}',
+                  isOpen: canteen.isOpen!,
+                );
+              },
+            );
+          }
         },
       ),
     );
   }
 }
+

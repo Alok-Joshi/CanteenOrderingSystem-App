@@ -1,7 +1,6 @@
 import 'package:canteen_ordering_app/views/canteen_page.dart';
 import 'package:get/get.dart';
-
-
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthenticationController extends GetxController {
 
@@ -21,7 +20,7 @@ class AuthenticationController extends GetxController {
 
     }
     void actionOnLogin(User? userFromFirebase) {
-    if (userFromFirebase != null) {
+    if (userFromFirebase != null) { //valid login
 
         Get.to(CanteenListPage());
 
@@ -37,3 +36,7 @@ class AuthenticationController extends GetxController {
 
 
 }
+
+//1) canteen model [canteen_id, owner_id, canteen_name, canteen_start_time, canteen_end_time]
+//2) Now make a controller for canteens
+//3) use Init method in widget to change call controller canteen name
