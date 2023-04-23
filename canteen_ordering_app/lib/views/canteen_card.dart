@@ -20,9 +20,17 @@ class CanteenCard extends StatelessWidget {
   void onTap(){
 
 
+    if(isOpen){
     Get.find<CanteenController>().currentCanteenID = canteen_id;
     Get.put(OrderController());
     Get.to(BottomNavBarWidget());
+    }
+    else
+    {
+
+        Get.snackbar("Error", "Canteen is closed");
+
+    }
 
 
   }
