@@ -45,9 +45,9 @@ class LoginPage extends StatelessWidget {
               SizedBox(height: 48.0),
               ElevatedButton(
                 child: Text('Login'),
-                onPressed: () {
-                   authcon.SignIn(emailController.text, passwordController.text);
-                   Get.put(CanteenController());  }
+                onPressed:  () async  {
+                   await authcon.signIn(emailController.text, passwordController.text);
+                   }
 
               ),
             ],

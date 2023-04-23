@@ -1,37 +1,28 @@
 import 'package:canteen_ordering_app/views/canteen_page.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:canteen_ordering_app/controllers/canteen_controller.dart';
 class AuthenticationController extends GetxController {
 
      Rx<User?> _userFromFirebase = Rx<User?>(null);
      final auth = FirebaseAuth.instance;
-     Future SignIn(String email, String password) async 
+     Future signIn(String email, String password) async 
      {
+            try{
+
             UserCredential userCredential = await auth.signInWithEmailAndPassword( email: email, password: password );
+            _userFromFirebase = userCredential.user.obs;
+            Get.put(CanteenController());  
+            Get.off(CanteenListPage());
+
+            }
+            on FirebaseAuthException catch (e) {
+
+                    Get.snackbar("Error","Invalid Email or Password");
+
+            }
 
      }
-
-    @override
-    void onReady(){
-
-        _userFromFirebase.bindStream(auth.authStateChanges());
-        ever(_userFromFirebase, actionOnLogin);
-
-    }
-    void actionOnLogin(User? userFromFirebase) {
-    if (userFromFirebase != null) { //valid login
-
-        Get.to(CanteenListPage());
-
-    } else {
-
-        //TODO:reload page, 
-        //Get.pop(), followed by get.off(Login Page(isWrongPassword = True))
-        print("fail");
-
-    }
-  }
 
 
 
