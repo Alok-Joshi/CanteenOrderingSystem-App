@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:canteen_ordering_app/models/menu_item.dart';
-
-class Order {
+//TODO: Add a timestamp
+class CanteenOrder {
   String? orderId;
   String? userId;
   String? canteenId;
   List<MapEntry<MenuItem, int>>? foodItems;
   String? status;
 
-  Order({
+  CanteenOrder({
     this.orderId,
     this.userId,
     this.canteenId,
@@ -16,7 +16,7 @@ class Order {
     this.status,
   });
 
-  factory Order.fromDocumentSnapshot(DocumentSnapshot doc) {
+  factory CanteenOrder.fromDocumentSnapshot(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     final List<MapEntry<MenuItem, int>> foodItems = (data['food_items'] as List<dynamic>)
         .map((e) => MapEntry<MenuItem, int>(
@@ -24,7 +24,7 @@ class Order {
               e['quantity'] as int,
             ))
         .toList();
-    return Order(
+    return CanteenOrder(
       orderId: doc.id,
       userId: data['user_id'] as String?,
       canteenId: data['canteen_id'] as String?,

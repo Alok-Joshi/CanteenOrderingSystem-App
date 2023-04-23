@@ -1,5 +1,6 @@
 import 'package:canteen_ordering_app/models/menu_item.dart';
 import 'package:canteen_ordering_app/models/menu.dart';
+import 'package:canteen_ordering_app/models/order.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:canteen_ordering_app/controllers/canteen_controller.dart';
@@ -10,6 +11,8 @@ class OrderController extends GetxController {
   Map<MenuItem,int>? cartTracker = {};
   //TODO: Make above map a map of cartTrackers, where we track carts for every canteen Map<String, Map<MenuItem,int>> , where String is key (canteen_id). Hence while querying,
   //first extract the currentCanteenID, and then proceed 
+  Map<String, CanteenOrder> orderTracker = {};
+  String currentOrderID = "";
 
   void onAddPressed(MenuItem item){
 
@@ -54,5 +57,17 @@ class OrderController extends GetxController {
 
       return MenuItemList.foodItems!.where((element) => element.type == type).toList();
 }
+
+Future createOrder(CanteenOrder newOrder) async {
+
+     DocumentReference ref = await _firestore.collection('orders').add(newOrder.toMap());
+     newOrder.orderId = ref.id;
+     orderTracker[ref.id] = newOrder;
+     currentOrderID = ref.id;
+     cartTracker = {}; //empty the cart now, order has been placed. in future, there will be more complex querying here 
+
 }
-//order: [user_id:str, canteen_id: str, food_items: [name, qty], status: string (preparing)]
+}
+//order: [order_id, user_id:str, canteen_id: str, food_items: [{food_item: menu_item,qty:qty},], status: string (preparing/ready)]
+//ActiveOrderPage: Order summary page which simply displays the order created above
+//tracking the order: 

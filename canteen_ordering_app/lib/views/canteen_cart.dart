@@ -1,11 +1,18 @@
+import 'package:canteen_ordering_app/controllers/authentication_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:canteen_ordering_app/controllers/order_controller.dart';
+import 'package:canteen_ordering_app/controllers/canteen_controller.dart';
 import 'package:get/get.dart';
 import 'package:canteen_ordering_app/models/menu_item.dart';
+import 'package:canteen_ordering_app/models/order.dart';
+import 'package:canteen_ordering_app/views/order_summary.dart';
 
 class CartWidget extends StatefulWidget {
+  OrderController ordcon = Get.find<OrderController>();
+  AuthenticationController authcon = Get.find<AuthenticationController>();
+  CanteenController cancon = Get.find<CanteenController>();
 
-  const CartWidget({Key? key}) : super(key: key);
+  CartWidget({Key? key}) : super(key: key);
 
   @override
   _CartWidgetState createState() => _CartWidgetState();
@@ -13,12 +20,11 @@ class CartWidget extends StatefulWidget {
 
 class _CartWidgetState extends State<CartWidget> {
   int _totalPrice = 0;
-  OrderController ordcon = Get.find<OrderController>();
 
 
   void _updateTotalPrice() {
     
-      _totalPrice = ordcon.cartTracker!.entries.fold(0, (acc,entry) => acc + entry.key.price! * entry.value);
+      _totalPrice = widget.ordcon.cartTracker!.entries.fold(0, (acc,entry) => acc + entry.key.price! * entry.value);
   }
 
   @override
@@ -27,14 +33,26 @@ class _CartWidgetState extends State<CartWidget> {
     super.initState();
   }
 
+  CanteenOrder getOrderObject(){
+
+      var user_id = widget.authcon.userFromFirebase.value!.uid;
+      var canteen_id = widget.cancon.currentCanteenID;
+      var status = "placed";
+      var foodItems = widget.ordcon.cartTracker!.entries.toList();
+
+      return CanteenOrder(userId: user_id, canteenId: canteen_id, status: status, foodItems: foodItems);
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    var itemlist = ordcon.cartTracker!.entries.toList();
+    var itemlist = widget.ordcon.cartTracker!.entries.toList();
     return Column(
       children: [
         Expanded(
           child: ListView.builder(
-            itemCount: ordcon.cartTracker!.length,
+            itemCount: widget.ordcon.cartTracker!.length,
             itemBuilder: (BuildContext context, int index) {
               final item = itemlist[index];
               return Padding(
@@ -47,7 +65,7 @@ class _CartWidgetState extends State<CartWidget> {
                     children: [
                       IconButton(
                           onPressed: () {setState(() {
-                           ordcon.onRemovePressed(item.key);
+                           widget.ordcon.onRemovePressed(item.key);
                           _updateTotalPrice();
                           });
                         },
@@ -57,7 +75,7 @@ class _CartWidgetState extends State<CartWidget> {
                       IconButton(
                         onPressed: () {
                           setState(() {
-                             ordcon.onAddPressed(item.key);
+                             widget.ordcon.onAddPressed(item.key);
                             _updateTotalPrice();
                           });
                         },
@@ -80,9 +98,10 @@ class _CartWidgetState extends State<CartWidget> {
                 style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   // TODO: Implement order functionality
-                  print('Order Placed!');
+                  await widget.ordcon.createOrder(getOrderObject());
+                  Get.off(OrderSummaryPage());
                 },
                 child: Text('Place Order'),
               ),
