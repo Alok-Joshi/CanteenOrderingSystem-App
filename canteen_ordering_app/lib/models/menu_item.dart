@@ -21,4 +21,12 @@ class MenuItem {
       'price': price,
     };
   }
+factory MenuItem.fromMap(Map<String, dynamic> map) {
+  return MenuItem(
+    name: map['name'] as String?,
+    type: map['type'] as String?,
+    price: map['price'] as int?,
+  );
+}
+
 }

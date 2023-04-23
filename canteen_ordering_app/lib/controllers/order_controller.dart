@@ -46,7 +46,7 @@ class OrderController extends GetxController {
 
       final menusCollection =  _firestore.collection('menus');
       final menuDoc = await menusCollection.where("canteen_id",isEqualTo: canteencon.currentCanteenID).get();
-      Menu MenuItemList = Menu.fromFirestoreDocument(menuDoc.docs[0].data());
+      Menu MenuItemList = Menu.fromFirestoreDocument(menuDoc.docs[0].data()); //TODO: handle empty menus 
         
 
 
@@ -55,3 +55,4 @@ class OrderController extends GetxController {
       return MenuItemList.foodItems!.where((element) => element.type == type).toList();
 }
 }
+//order: [user_id:str, canteen_id: str, food_items: [name, qty], status: string (preparing)]
