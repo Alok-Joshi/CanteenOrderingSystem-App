@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:carp_core/carp_core.dart';
 
 class Canteen {
   final String? canteenId;
@@ -19,9 +20,12 @@ class Canteen {
 
   factory Canteen.fromFirestore(DocumentSnapshot<Map<String,dynamic>> documentSnapshot) {
     Map<String, dynamic>? data = documentSnapshot.data();
-    final currentTime = DateTime.now().hour;
 
-    bool is_open = currentTime >= (data!['canteen_start_time'].toDate().hour) && currentTime<= (data['canteen_end_time'].toDate().hour);
+    TimeOfDay currentTime = TimeOfDay.fromDateTime(DateTime.now());
+    TimeOfDay lowerLim = TimeOfDay.fromDateTime(data!['canteen_start_time'].toDate());
+    TimeOfDay upperLim = TimeOfDay.fromDateTime(data!['canteen_end_time'].toDate());
+
+    bool is_open = currentTime.isAfter(lowerLim) && currentTime.isBefore(upperLim);
     return Canteen(
       canteenId: documentSnapshot.id,
       ownerId: data['owner_id'],
