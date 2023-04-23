@@ -1,4 +1,8 @@
+import 'package:canteen_ordering_app/views/canteen_menu_page.dart';
+import 'package:canteen_ordering_app/controllers/order_controller.dart';
+import 'package:canteen_ordering_app/controllers/canteen_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CanteenCard extends StatelessWidget {
   final String canteen_id;
@@ -13,7 +17,15 @@ class CanteenCard extends StatelessWidget {
     required this.isOpen,
   });
 
-  void onTap(){}
+  void onTap(){
+
+
+    Get.find<CanteenController>().currentCanteenID = canteen_id;
+    Get.put(OrderController());
+    Get.to(BottomNavBarWidget());
+
+
+  }
 
   @override
   Widget build(BuildContext context) {

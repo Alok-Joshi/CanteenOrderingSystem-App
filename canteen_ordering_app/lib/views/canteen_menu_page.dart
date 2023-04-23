@@ -24,7 +24,7 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
 
       foodItems = ordercon.getMenuItems("F");
       drinkItems = ordercon.getMenuItems("D");
-      _children = [ MenuItemList(menuItems: foodItems,),CartWidget(), ];
+      _children = [ MenuItemList(menuItems: foodItems,), MenuItemList(menuItems:drinkItems),CartWidget(), ];
       
   }
 
@@ -38,12 +38,15 @@ class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.fastfood),
+            label:""
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_drink),
+            label:""
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
+            label:""
           ),
         ],
       ),

@@ -24,6 +24,7 @@ class MenuItemList extends StatelessWidget {
             );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             // Show a message if there are no canteens to display
+            print(snapshot.data);
             return Center(
               child: Text('No items found.'),
             );

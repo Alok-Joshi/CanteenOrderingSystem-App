@@ -19,9 +19,9 @@ class Canteen {
 
   factory Canteen.fromFirestore(DocumentSnapshot<Map<String,dynamic>> documentSnapshot) {
     Map<String, dynamic>? data = documentSnapshot.data();
-    final currentTime = DateTime.now();
+    final currentTime = DateTime.now().hour;
 
-    bool is_open = currentTime.isAfter(data!['canteen_start_time'].toDate()) && currentTime.isAfter(data['canteen_end_time']);
+    bool is_open = currentTime >= (data!['canteen_start_time'].toDate().hour) && currentTime<= (data['canteen_end_time'].toDate().hour);
     return Canteen(
       canteenId: documentSnapshot.id,
       ownerId: data['owner_id'],

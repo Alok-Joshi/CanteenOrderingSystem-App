@@ -9,10 +9,9 @@ class MenuItem {
     required this.price,
   });
 
-  MenuItem.fromFirestoreDocument(Map<String, dynamic> firestoreDocument) {
-    name = firestoreDocument['name'];
-    type = firestoreDocument['type'];
-    price = firestoreDocument['price'];
+  factory MenuItem.fromFirestoreDocument(Map<String, dynamic> firestoreDocument) {
+
+    return MenuItem(name:firestoreDocument['name'],type:firestoreDocument['type'],price:firestoreDocument['price']);
   }
 
   Map<String, dynamic> toMap() {

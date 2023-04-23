@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 class MenuItemCard extends StatefulWidget {
   final MenuItem menuItem;
+  int selectedQuantity = 0;
   OrderController ordcon = Get.find<OrderController>();
 
   MenuItemCard({
@@ -17,7 +18,6 @@ class MenuItemCard extends StatefulWidget {
 }
 
 class _MenuItemCardState extends State<MenuItemCard> {
-  int SelectedQuantity = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -47,20 +47,18 @@ class _MenuItemCardState extends State<MenuItemCard> {
                   icon: Icon(Icons.remove_circle_outline),
                   onPressed: () {
                     setState(() {
-                      SelectedQuantity +=1;
                       widget.ordcon.onRemovePressed(widget.menuItem);
                     });
                   },
                 ),
                 Text(
-                  '${SelectedQuantity}',
+                  '${widget.ordcon.getQuantity(widget.menuItem)}',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   icon: Icon(Icons.add_circle_outline),
                   onPressed: () {
                     setState(() {
-                      SelectedQuantity  = (SelectedQuantity  == 0?0: SelectedQuantity -1);
                       widget.ordcon.onAddPressed(widget.menuItem);
                     });
                   },

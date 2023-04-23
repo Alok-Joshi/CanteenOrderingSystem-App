@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:canteen_ordering_app/controllers/canteen_controller.dart';
 import 'package:canteen_ordering_app/models/canteen.dart';
 import 'canteen_card.dart';
+import 'package:intl/intl.dart';
 
 class CanteenListPage extends StatelessWidget {
   final CanteenController _canteenController = Get.find<CanteenController>();
@@ -37,11 +38,12 @@ class CanteenListPage extends StatelessWidget {
               itemCount: snapshot.data!.length,
               itemBuilder: (BuildContext context, int index) {
                 final canteen = snapshot.data![index];
+                
                 return CanteenCard(
                   canteen_id: canteen.canteenId!,
                   canteenName: canteen.canteenName!,
                   canteenTimings:
-                      '${canteen.canteenStartTime!.hour} - ${canteen.canteenEndTime!.hour}',
+                      '${DateFormat('h:mm a').format(canteen.canteenStartTime!)} - ${DateFormat('h:mm a').format(canteen.canteenEndTime!)}',
                   isOpen: canteen.isOpen!,
                 );
               },

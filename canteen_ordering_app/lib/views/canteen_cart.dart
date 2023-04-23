@@ -18,11 +18,12 @@ class _CartWidgetState extends State<CartWidget> {
 
   void _updateTotalPrice() {
     
-      _totalPrice = ordcon.cartTracker!.values.reduce((value,element) => value + element);
+      _totalPrice = ordcon.cartTracker!.entries.fold(0, (acc,entry) => acc + entry.key.price! * entry.value);
   }
 
   @override
   void initState() {
+    _updateTotalPrice();
     super.initState();
   }
 
