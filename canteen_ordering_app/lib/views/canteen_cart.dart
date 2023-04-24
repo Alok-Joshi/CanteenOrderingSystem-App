@@ -24,7 +24,7 @@ class _CartWidgetState extends State<CartWidget> {
 
   void _updateTotalPrice() {
     
-      _totalPrice = widget.ordcon.cartTracker!.entries.fold(0, (acc,entry) => acc + entry.key.price! * entry.value);
+      _totalPrice = widget.ordcon.cartTracker!.entries.fold(0, (acc,entry) => acc + entry.value.key.price! * entry.value.value);
   }
 
   @override
@@ -33,26 +33,16 @@ class _CartWidgetState extends State<CartWidget> {
     super.initState();
   }
 
-  CanteenOrder getOrderObject(){
-
-      var user_id = widget.authcon.userFromFirebase.value!.uid;
-      var canteen_id = widget.cancon.currentCanteenID;
-      var status = "placed";
-      var foodItems = widget.ordcon.cartTracker!.entries.toList();
-
-      return CanteenOrder(userId: user_id, canteenId: canteen_id, status: status, foodItems: foodItems);
-
-
-  }
+  
 
   @override
   Widget build(BuildContext context) {
-    var itemlist = widget.ordcon.cartTracker!.entries.toList();
+    var itemlist = widget.ordcon.getCartEntries();
     return Column(
       children: [
         Expanded(
           child: ListView.builder(
-            itemCount: widget.ordcon.cartTracker!.length,
+            itemCount: itemlist.length,
             itemBuilder: (BuildContext context, int index) {
               final item = itemlist[index];
               return Padding(
@@ -65,7 +55,7 @@ class _CartWidgetState extends State<CartWidget> {
                     children: [
                       IconButton(
                           onPressed: () {setState(() {
-                           widget.ordcon.onRemovePressed(item.key);
+                           widget.ordcon.onRemovePressed(item.key.id);
                           _updateTotalPrice();
                           });
                         },
@@ -75,7 +65,7 @@ class _CartWidgetState extends State<CartWidget> {
                       IconButton(
                         onPressed: () {
                           setState(() {
-                             widget.ordcon.onAddPressed(item.key);
+                             widget.ordcon.onAddPressed(item.key.id);
                             _updateTotalPrice();
                           });
                         },
@@ -100,7 +90,7 @@ class _CartWidgetState extends State<CartWidget> {
               ElevatedButton(
                 onPressed: () async {
                   // TODO: Implement order functionality
-                  await widget.ordcon.createOrder(getOrderObject());
+                  await widget.ordcon.createOrder();
                   Get.off(OrderSummaryPage());
                 },
                 child: Text('Place Order'),

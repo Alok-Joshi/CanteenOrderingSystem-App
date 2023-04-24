@@ -47,19 +47,19 @@ class _MenuItemCardState extends State<MenuItemCard> {
                   icon: Icon(Icons.remove_circle_outline),
                   onPressed: () {
                     setState(() {
-                      widget.ordcon.onRemovePressed(widget.menuItem);
+                      widget.ordcon.onRemovePressed(widget.menuItem.id);
                     });
                   },
                 ),
                 Text(
-                  '${widget.ordcon.getQuantity(widget.menuItem)}',
+                  '${widget.ordcon.getQuantity(widget.menuItem.id)}',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   icon: Icon(Icons.add_circle_outline),
                   onPressed: () {
                     setState(() {
-                      widget.ordcon.onAddPressed(widget.menuItem);
+                      widget.ordcon.onAddPressed(widget.menuItem.id);
                     });
                   },
                 ),

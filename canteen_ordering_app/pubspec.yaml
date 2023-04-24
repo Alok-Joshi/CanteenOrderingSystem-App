@@ -39,6 +39,8 @@ dependencies:
   firebase_core: ^2.10.0
   firebase_auth: ^4.4.2
   cloud_firestore: ^4.5.2
+  carp_core: ^0.40.8
+  tuple: ^2.0.1
 
 dev_dependencies:
   flutter_test:

@@ -17,13 +17,20 @@ class CanteenCard extends StatelessWidget {
     required this.isOpen,
   });
 
-  void onTap(){
+  void onTap() {
 
 
     if(isOpen){
-    Get.find<CanteenController>().currentCanteenID = canteen_id;
-    Get.put(OrderController());
-    Get.to(BottomNavBarWidget());
+
+    if(canteen_id != Get.find<CanteenController>().currentCanteenID){
+        //implies that a new canteen is being selected. Clear Previous canteen selections.
+
+        Get.find<OrderController>().clearState(); //clears the state of the previous selection
+
+    }
+      Get.find<CanteenController>().currentCanteenID = canteen_id;
+      Get.to(BottomNavBarWidget());
+
     }
     else
     {

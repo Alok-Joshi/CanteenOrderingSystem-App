@@ -12,19 +12,17 @@ class BottomNavBarWidget extends StatefulWidget {
 
 class _BottomNavBarWidgetState extends State<BottomNavBarWidget> {
   OrderController ordercon = Get.find<OrderController>();
-  Future<List<MenuItem>>? foodItems;
-  Future<List<MenuItem>>? drinkItems;
   OrderController ordcon = Get.find<OrderController>();
   List<Widget>? _children;
   
   int _currentIndex = 0;
 
   @override
-  void initState(){
+  void initState() {
 
-      foodItems = ordercon.getMenuItems("F");
-      drinkItems = ordercon.getMenuItems("D");
-      _children = [ MenuItemList(menuItems: foodItems,), MenuItemList(menuItems:drinkItems),CartWidget(), ];
+      _children = [ MenuItemList(itemType: 'F',), MenuItemList(itemType:'D'),CartWidget(), ];
+
+      super.initState();
       
   }
 

@@ -1,70 +1,112 @@
+import 'package:canteen_ordering_app/controllers/authentication_controller.dart';
 import 'package:canteen_ordering_app/models/menu_item.dart';
 import 'package:canteen_ordering_app/models/menu.dart';
 import 'package:canteen_ordering_app/models/order.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:canteen_ordering_app/controllers/canteen_controller.dart';
+import 'dart:math';
 
 class OrderController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final canteencon = Get.find<CanteenController>();
-  Map<MenuItem,int>? cartTracker = {};
-  //TODO: Make above map a map of cartTrackers, where we track carts for every canteen Map<String, Map<MenuItem,int>> , where String is key (canteen_id). Hence while querying,
-  //first extract the currentCanteenID, and then proceed 
+  final authcon = Get.find<AuthenticationController>();
+  Map<String,MapEntry<MenuItem,int>>? cartTracker = {};
+  List<MenuItem>? foodItems;
+  List<MenuItem>? drinkItems;
+
   Map<String, CanteenOrder> orderTracker = {};
   String currentOrderID = "";
 
-  void onAddPressed(MenuItem item){
+  void onAddPressed(String? itemId){
 
-      cartTracker![item] = (cartTracker![item] == null? 1 : cartTracker![item]! + 1); 
+      cartTracker![itemId!] = MapEntry(cartTracker![itemId]!.key, cartTracker![itemId]!.value+1);
+
 
   }
 
-  void onRemovePressed(MenuItem item){
+  void onRemovePressed(String? itemId){
 
-      if(cartTracker![item] == null) return;
+      cartTracker![itemId!] = MapEntry(cartTracker![itemId]!.key, max(0,cartTracker![itemId]!.value-1));
 
-      cartTracker![item] = (cartTracker![item] == null? -1: cartTracker![item]! - 1);
+  }
+  int getQuantity(String? itemId){
 
-      if(cartTracker![item]! <= 0 ){
+     
+      return cartTracker![itemId]!.value;
 
-            cartTracker!.remove(item);
+  }
+  CanteenOrder getOrderObject(){
+
+      var user_id = authcon.userFromFirebase.value!.uid;
+      var canteen_id = canteencon.currentCanteenID;
+      var status = "placed";
+      var foodItems = cartTracker!.values.where((element) => element.value>0).toList();
+  
+
+      return CanteenOrder(userId: user_id, canteenId: canteen_id, status: status, foodItems: foodItems);
 
 
+  }
+  List<MapEntry<MenuItem,int>> getCartEntries(){
+
+      var foodItems = cartTracker!.values.where((element) => element.value>0).toList();
+      return foodItems;
+
+
+
+  }
+  Future<List<MenuItem>>? getMenuItems(String? type) async {
+
+      if(type == 'F' && foodItems != null){
+
+        return Future.value(foodItems);
       }
+      else if(type == 'D' && drinkItems != null){
 
-
-  }
-  int getQuantity(MenuItem item){
-
-      if(cartTracker![item] == null){
-        return 0;
+        return Future.value(drinkItems);
       }
-      else return cartTracker![item]!;
-
-
-  }
-
-  Future<List<MenuItem>> getMenuItems(String type) async {
 
       final menusCollection =  _firestore.collection('menus');
       final menuDoc = await menusCollection.where("canteen_id",isEqualTo: canteencon.currentCanteenID).get();
-      Menu MenuItemList = Menu.fromFirestoreDocument(menuDoc.docs[0].data()); //TODO: handle empty menus 
-        
+      var canteenMenu = Menu.fromFirestoreDocument(menuDoc.docs[0].data()); //TODO: handle empty menus 
+
+      var items =  canteenMenu.foodItems!.where((element) => element.type == type).toList();
 
 
+      if(type == 'F'){
+        foodItems =  items;
 
+      }
+      else
+      {
+        drinkItems =  items;
+          
+      }
 
-      return MenuItemList.foodItems!.where((element) => element.type == type).toList();
+      for( MenuItem item in items){
+          cartTracker![item.id!] = MapEntry(item,0);
+      }
+
+      return Future.value(items);
+
 }
 
-Future createOrder(CanteenOrder newOrder) async {
+void clearState(){
+    //empty the order selection history.
+    cartTracker = {};
+    foodItems = null;
+    drinkItems = null;
 
+}
+Future createOrder() async {
+
+     CanteenOrder newOrder = getOrderObject();
      DocumentReference ref = await _firestore.collection('orders').add(newOrder.toMap());
      newOrder.orderId = ref.id;
      orderTracker[ref.id] = newOrder;
      currentOrderID = ref.id;
-     cartTracker = {}; //empty the cart now, order has been placed. in future, there will be more complex querying here 
+     clearState(); 
 
 }
 }
