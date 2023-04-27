@@ -1,3 +1,4 @@
+import 'package:canteen_ordering_app/views/canteen_cart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:canteen_ordering_app/controllers/canteen_controller.dart';
@@ -27,6 +28,13 @@ class _CanteenListPageState extends State<CanteenListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Canteen List'),
+        actions: [
+          IconButton(icon: const Icon(Icons.shopping_cart),
+                     tooltip: 'Open Cart',
+                     onPressed: (){
+                            Get.to(Scaffold(body:CartWidget()));
+                     })
+        ]
       ),
       body: FutureBuilder(
         future: _canteensFuture,
