@@ -20,7 +20,7 @@ class CanteenCard extends StatelessWidget {
   void onTap() {
 
 
-    if(isOpen){
+    if(true){
 
     if(canteen_id != Get.find<CanteenController>().currentCanteenID){
         //implies that a new canteen is being selected. Clear Previous canteen selections.

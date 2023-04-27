@@ -24,7 +24,7 @@ class _CartWidgetState extends State<CartWidget> {
 
   void _updateTotalPrice() {
     
-      _totalPrice = widget.ordcon.cartTracker!.entries.fold(0, (acc,entry) => acc + entry.value.key.price! * entry.value.value);
+      _totalPrice = widget.ordcon.cartTracker.entries.fold(0, (acc,entry) => acc + entry.value.key.price! * entry.value.value);
   }
 
   @override
@@ -38,7 +38,9 @@ class _CartWidgetState extends State<CartWidget> {
   @override
   Widget build(BuildContext context) {
     var itemlist = widget.ordcon.getCartEntries();
-    return Column(
+    return Scaffold(
+    appBar: AppBar(title: Text(widget.cancon.canteenMap[widget.cancon.currentCanteenID]!.canteenName!)),
+    body:Column(
       children: [
         Expanded(
           child: ListView.builder(
@@ -99,6 +101,7 @@ class _CartWidgetState extends State<CartWidget> {
           ),
         ),
       ],
+    )
     );
   }
 }

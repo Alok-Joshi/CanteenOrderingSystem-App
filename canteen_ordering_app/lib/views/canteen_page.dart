@@ -32,7 +32,16 @@ class _CanteenListPageState extends State<CanteenListPage> {
           IconButton(icon: const Icon(Icons.shopping_cart),
                      tooltip: 'Open Cart',
                      onPressed: (){
-                            Get.to(Scaffold(body:CartWidget()));
+                            if(!Get.find<OrderController>().cartEmpty()){
+
+                                Get.to(CartWidget());
+
+                            }
+                            else
+                            {
+                                Get.snackbar("", "Cart is Empty");
+                              
+                            }
                      })
         ]
       ),

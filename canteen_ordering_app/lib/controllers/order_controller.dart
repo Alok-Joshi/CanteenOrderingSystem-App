@@ -11,29 +11,37 @@ class OrderController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final canteencon = Get.find<CanteenController>();
   final authcon = Get.find<AuthenticationController>();
-  Map<String,MapEntry<MenuItem,int>>? cartTracker = {};
+  Map<String,MapEntry<MenuItem,int>> cartTracker = {};
   List<MenuItem>? foodItems;
   List<MenuItem>? drinkItems;
 
   Map<String, CanteenOrder> orderTracker = {};
   String currentOrderID = "";
 
+  bool cartEmpty(){
+
+
+      int totalCost = cartTracker.entries.fold(0, (acc,entry) => acc + entry.value.key.price! * entry.value.value);
+      return totalCost == 0;
+
+
+  }
   void onAddPressed(String? itemId){
 
-      cartTracker![itemId!] = MapEntry(cartTracker![itemId]!.key, cartTracker![itemId]!.value+1);
+      cartTracker[itemId!] = MapEntry(cartTracker[itemId]!.key, cartTracker[itemId]!.value+1);
 
 
   }
 
   void onRemovePressed(String? itemId){
 
-      cartTracker![itemId!] = MapEntry(cartTracker![itemId]!.key, max(0,cartTracker![itemId]!.value-1));
+      cartTracker[itemId!] = MapEntry(cartTracker[itemId]!.key, max(0,cartTracker[itemId]!.value-1));
 
   }
   int getQuantity(String? itemId){
 
      
-      return cartTracker![itemId]!.value;
+      return cartTracker[itemId]!.value;
 
   }
   CanteenOrder getOrderObject(){
@@ -41,7 +49,7 @@ class OrderController extends GetxController {
       var user_id = authcon.userFromFirebase.value!.uid;
       var canteen_id = canteencon.currentCanteenID;
       var status = "placed";
-      var foodItems = cartTracker!.values.where((element) => element.value>0).toList();
+      var foodItems = cartTracker.values.where((element) => element.value>0).toList();
   
 
       return CanteenOrder(userId: user_id, canteenId: canteen_id, status: status, foodItems: foodItems);
@@ -50,7 +58,7 @@ class OrderController extends GetxController {
   }
   List<MapEntry<MenuItem,int>> getCartEntries(){
 
-      var foodItems = cartTracker!.values.where((element) => element.value>0).toList();
+      var foodItems = cartTracker.values.where((element) => element.value>0).toList();
       return foodItems;
 
 
@@ -85,7 +93,7 @@ class OrderController extends GetxController {
       }
 
       for( MenuItem item in items){
-          cartTracker![item.id!] = MapEntry(item,0);
+          cartTracker[item.id!] = MapEntry(item,0);
       }
 
       return Future.value(items);
