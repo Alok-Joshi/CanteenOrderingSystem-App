@@ -3,10 +3,11 @@ import 'package:canteen_ordering_app/models/menu_item.dart';
 //TODO: Add a timestamp
 class CanteenOrder {
   String? orderId;
+  int? tokenNumber;
   String? userId;
   String? canteenId;
   List<MapEntry<MenuItem, int>>? foodItems;
-  String? status;
+  String? status; //Placed, In Progress, Ready
 
   CanteenOrder({
     this.orderId,
@@ -16,8 +17,8 @@ class CanteenOrder {
     this.status,
   });
 
-  factory CanteenOrder.fromDocumentSnapshot(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory CanteenOrder.fromDocumentSnapshot(QueryDocumentSnapshot<Map<String,dynamic>> doc) {
+    final data = doc.data();
     final List<MapEntry<MenuItem, int>> foodItems = (data['food_items'] as List<dynamic>)
         .map((e) => MapEntry<MenuItem, int>(
               MenuItem.fromMap(e['menu_item']),

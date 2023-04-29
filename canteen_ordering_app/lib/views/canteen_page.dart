@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:canteen_ordering_app/controllers/canteen_controller.dart';
 import 'package:canteen_ordering_app/controllers/order_controller.dart';
 import 'package:canteen_ordering_app/models/canteen.dart';
+import 'package:canteen_ordering_app/views/active_order_page.dart';
 import 'canteen_card.dart';
 import 'package:intl/intl.dart';
 
@@ -17,7 +18,7 @@ class _CanteenListPageState extends State<CanteenListPage> {
   final CanteenController _canteenController = Get.find<CanteenController>();
   late Future<List<Canteen>> _canteensFuture;
   List<Widget> _children = [];
-  int currentIndex = 0;
+  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -62,7 +63,8 @@ class _CanteenListPageState extends State<CanteenListPage> {
             );
           }
         },
-      )
+      ),
+      OrderListWidget()
 
 
 
@@ -92,8 +94,9 @@ class _CanteenListPageState extends State<CanteenListPage> {
                      })
         ]
       ),
-      body: _children[currentIndex],
+      body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.restaurant),
@@ -104,9 +107,9 @@ class _CanteenListPageState extends State<CanteenListPage> {
             label: 'Orders',
           ),
         ],
-        onTap: (index){
+        onTap: (int index){
 
-            setState((){ currentIndex = index;});
+            setState((){ _currentIndex = index;});
 
         }, 
       ),

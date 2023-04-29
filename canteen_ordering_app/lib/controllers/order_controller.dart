@@ -14,10 +14,30 @@ class OrderController extends GetxController {
   Map<String,MapEntry<MenuItem,int>> cartTracker = {};
   List<MenuItem>? foodItems;
   List<MenuItem>? drinkItems;
+  List<CanteenOrder>  activeOrders  = [];
+  List<CanteenOrder>? pastOrders;
 
   Map<String, CanteenOrder> orderTracker = {};
-  String currentOrderID = "";
 
+  @override
+  Future<List<CanteenOrder>> getActiveOrders() async {
+
+
+      if(activeOrders.length > 0){ //implies there are orders
+
+        return activeOrders;
+        
+      }
+
+
+      var activeOrdersdb = await _firestore.collection("orders").where('user_id',isEqualTo: authcon.userFromFirebase.value!.uid).where('status',whereIn:["In Progress", "Placed", "Ready"]).get();
+
+      activeOrders = activeOrdersdb.docs.map((doc) => CanteenOrder.fromDocumentSnapshot(doc)).toList();
+      return activeOrders;
+
+
+
+  }
   bool cartEmpty(){
 
 
@@ -48,7 +68,7 @@ class OrderController extends GetxController {
 
       var user_id = authcon.userFromFirebase.value!.uid;
       var canteen_id = canteencon.currentCanteenID;
-      var status = "placed";
+      var status = "Placed";
       var foodItems = cartTracker.values.where((element) => element.value>0).toList();
   
 
@@ -113,11 +133,12 @@ Future createOrder() async {
      DocumentReference ref = await _firestore.collection('orders').add(newOrder.toMap());
      newOrder.orderId = ref.id;
      orderTracker[ref.id] = newOrder;
-     currentOrderID = ref.id;
+     //order placed successfully, now get the token
+     //newOrder.tokenNumber = await _firestore.collection('tokens').where(order_id == newOrder.orderId) commenting this out for now, cloud function not implemented yet
+
+     activeOrders!.add(newOrder);
+     //get the current order
      clearState(); 
 
 }
 }
-//order: [order_id, user_id:str, canteen_id: str, food_items: [{food_item: menu_item,qty:qty},], status: string (preparing/ready)]
-//ActiveOrderPage: Order summary page which simply displays the order created above
-//tracking the order: 

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:canteen_ordering_app/controllers/order_controller.dart';
 
 class OrderSummaryPage extends StatelessWidget {
-  CanteenOrder order = Get.find<OrderController>().orderTracker[Get.find<OrderController>().currentOrderID]!;
+  CanteenOrder order = Get.find<OrderController>().orderTracker[Get.find<OrderController>().activeOrders[0].orderId]!;
 
   OrderSummaryPage({Key? key}) : super(key: key);
 
