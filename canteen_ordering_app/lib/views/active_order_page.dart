@@ -9,24 +9,11 @@ class OrderListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<CanteenOrder>>(
-      future: ordcon.getActiveOrders(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(
-            child: Text('No orders found.'),
-          );
-        } else {
+   
+      
+      
           return ListView.builder(
-            itemCount: snapshot.data!.length,
+            itemCount: ordcon.activeOrders.value.length,
             itemBuilder: (BuildContext context, int index) {
               return OrderCard(              
                orderIndex: index
@@ -34,7 +21,4 @@ class OrderListWidget extends StatelessWidget {
             },
           );
         }
-      },
-    );
-  }
 }

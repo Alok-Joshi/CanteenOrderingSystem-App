@@ -14,30 +14,34 @@ class OrderController extends GetxController {
   Map<String,MapEntry<MenuItem,int>> cartTracker = {};
   List<MenuItem>? foodItems;
   List<MenuItem>? drinkItems;
-  List<CanteenOrder>  activeOrders  = [];
+  RxList<CanteenOrder> activeOrders = <CanteenOrder>[].obs;
   List<CanteenOrder>? pastOrders;
 
   Map<String, CanteenOrder> orderTracker = {};
 
-  @override
-  Future<List<CanteenOrder>> getActiveOrders() async {
+  Stream<List<CanteenOrder>> orderStream(){
 
+    
+    var activeOrderStream =_firestore.collection("orders").where("user_id",isEqualTo:authcon.userFromFirebase.value!.uid).snapshots().map((event){
 
-      if(activeOrders.length > 0){ //implies there are orders
+        return event.docs.map((e) => CanteenOrder.fromDocumentSnapshot(e),).toList();
 
-        return activeOrders;
-        
-      }
+    }
+    ,);
 
-
-      var activeOrdersdb = await _firestore.collection("orders").where('user_id',isEqualTo: authcon.userFromFirebase.value!.uid).where('status',whereIn:["In Progress", "Placed", "Ready"]).get();
-
-      activeOrders = activeOrdersdb.docs.map((doc) => CanteenOrder.fromDocumentSnapshot(doc)).toList();
-      return activeOrders;
+    return activeOrderStream;
 
 
 
   }
+  @override
+  void onInit(){
+    super.onInit();
+
+    activeOrders.bindStream(orderStream());
+
+  }
+  
   bool cartEmpty(){
 
 
@@ -136,7 +140,7 @@ Future createOrder() async {
      //order placed successfully, now get the token
      //newOrder.tokenNumber = await _firestore.collection('tokens').where(order_id == newOrder.orderId) commenting this out for now, cloud function not implemented yet
 
-     activeOrders!.add(newOrder);
+     activeOrders.add(newOrder);
      //get the current order
      clearState(); 
 

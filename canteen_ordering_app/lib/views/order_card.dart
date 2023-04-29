@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 class OrderCard extends StatelessWidget {
 
       final CanteenController cancon = Get.find<CanteenController>();
-      final OrderController ordcon = Get.find<OrderController>();
       int orderIndex;
 
   OrderCard({
@@ -16,7 +15,8 @@ class OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return GetX<OrderController>(
+    builder:(ordcon){ return Card(
       elevation: 3.0,
       child: Padding(
         padding: EdgeInsets.all(16.0),
@@ -24,22 +24,22 @@ class OrderCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${cancon.canteenMap[ordcon.activeOrders[orderIndex].canteenId]!.canteenName}', //orderID for now
+              '${cancon.canteenMap[ordcon.activeOrders.value[orderIndex].canteenId]!.canteenName}', //orderID for now
 
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),Text(
-              'Token No: ${ordcon.activeOrders[orderIndex].orderId}', //orderID for now
+              'Token No: ${ordcon.activeOrders.value[orderIndex].orderId}', //orderID for now
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(height: 8.0),
             Text(
-              '${ordcon.activeOrders[orderIndex].status}',
+              '${ordcon.activeOrders.value[orderIndex].status}',
               style: TextStyle(
-                color: _getStatusColor(ordcon.activeOrders[orderIndex].status),
+                color: _getStatusColor(ordcon.activeOrders.value[orderIndex].status),
               ),
             ),
             SizedBox(height: 8.0),
@@ -58,7 +58,7 @@ class OrderCard extends StatelessWidget {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: ordcon.activeOrders[orderIndex].foodItems!.map( (item) {
+              children: ordcon.activeOrders.value[orderIndex].foodItems!.map( (item) {
                 
                 return Text('${item.key.name} X ${item.value}');
               }).toList(),
@@ -66,6 +66,8 @@ class OrderCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+    },
     );
   }
 
