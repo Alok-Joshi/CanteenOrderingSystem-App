@@ -15,14 +15,29 @@ class OrderController extends GetxController {
   List<MenuItem>? foodItems;
   List<MenuItem>? drinkItems;
   RxList<CanteenOrder> activeOrders = <CanteenOrder>[].obs;
-  List<CanteenOrder>? pastOrders;
+  RxList<CanteenOrder> pastOrders = <CanteenOrder>[].obs;
 
   Map<String, CanteenOrder> orderTracker = {};
 
+
+ Stream<List<CanteenOrder>> pastOrderStream(){
+
+    
+    var pastOrdersStream =_firestore.collection("orders").where("user_id",isEqualTo:authcon.userFromFirebase.value!.uid).where("status", whereIn: ["Completed"]).snapshots().map((event){
+
+        return event.docs.map((e) => CanteenOrder.fromDocumentSnapshot(e),).toList();
+
+    }
+    ,);
+
+    return pastOrdersStream;
+
+
+  }
   Stream<List<CanteenOrder>> orderStream(){
 
     
-    var activeOrderStream =_firestore.collection("orders").where("user_id",isEqualTo:authcon.userFromFirebase.value!.uid).snapshots().map((event){
+    var activeOrderStream =_firestore.collection("orders").where("user_id",isEqualTo:authcon.userFromFirebase.value!.uid).where("status", whereIn: ["In Progress","Placed","Ready"]).snapshots().map((event){
 
         return event.docs.map((e) => CanteenOrder.fromDocumentSnapshot(e),).toList();
 
@@ -32,13 +47,13 @@ class OrderController extends GetxController {
     return activeOrderStream;
 
 
-
   }
   @override
   void onInit(){
     super.onInit();
 
     activeOrders.bindStream(orderStream());
+    pastOrders.bindStream(pastOrderStream());
 
   }
   

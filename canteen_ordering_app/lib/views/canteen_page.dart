@@ -1,10 +1,14 @@
+import 'package:canteen_ordering_app/controllers/authentication_controller.dart';
 import 'package:canteen_ordering_app/views/canteen_cart.dart';
+import 'package:canteen_ordering_app/views/login_page.dart';
+import 'package:canteen_ordering_app/views/past_order_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:canteen_ordering_app/controllers/canteen_controller.dart';
 import 'package:canteen_ordering_app/controllers/order_controller.dart';
 import 'package:canteen_ordering_app/models/canteen.dart';
 import 'package:canteen_ordering_app/views/active_order_page.dart';
+import 'package:canteen_ordering_app/views/past_order_page.dart';
 import 'canteen_card.dart';
 import 'package:intl/intl.dart';
 
@@ -16,6 +20,7 @@ class CanteenListPage extends StatefulWidget {
 
 class _CanteenListPageState extends State<CanteenListPage> {
   final CanteenController _canteenController = Get.find<CanteenController>();
+  final AuthenticationController authcon = Get.find<AuthenticationController>();
   late Future<List<Canteen>> _canteensFuture;
   List<Widget> _children = [];
   int _currentIndex = 0;
@@ -75,6 +80,36 @@ class _CanteenListPageState extends State<CanteenListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+ drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children:  <Widget>[
+            UserAccountsDrawerHeader(
+              accountName: Text("Alok Joshi"), //TODO: replace by display name later (configure display name, authcon.userFromFirebase.value!.email
+              accountEmail: Text(authcon.userFromFirebase.value!.email!),
+              
+              ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Past Orders'),
+              onTap: () {
+                Get.to(PastOrderPage());
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.search),
+              title: Text('Signout'),
+              onTap: () async {
+
+                await authcon.signOut();
+                Get.offAll(LoginPage());
+              },
+            ),
+            
+            
+          ],
+        ),
+      ),
       appBar: AppBar(
         title: Text('Canteen List'),
         actions: [

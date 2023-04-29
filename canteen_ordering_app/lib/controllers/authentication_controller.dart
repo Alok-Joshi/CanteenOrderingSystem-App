@@ -24,6 +24,12 @@ class AuthenticationController extends GetxController {
 
      }
 
+     Future signOut() async {
+
+        await auth.signOut();
+
+     }
+
 
 
 }
