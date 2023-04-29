@@ -9,43 +9,24 @@ import 'package:intl/intl.dart';
 
 class CanteenListPage extends StatefulWidget {
   @override
+  
   _CanteenListPageState createState() => _CanteenListPageState();
 }
 
 class _CanteenListPageState extends State<CanteenListPage> {
   final CanteenController _canteenController = Get.find<CanteenController>();
   late Future<List<Canteen>> _canteensFuture;
+  List<Widget> _children = [];
+  int currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _canteensFuture = _canteenController.getCanteens();
     Get.put(OrderController());
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Canteen List'),
-        actions: [
-          IconButton(icon: const Icon(Icons.shopping_cart),
-                     tooltip: 'Open Cart',
-                     onPressed: (){
-                            if(!Get.find<OrderController>().cartEmpty()){
-
-                                Get.to(CartWidget());
-
-                            }
-                            else
-                            {
-                                Get.snackbar("", "Cart is Empty");
-                              
-                            }
-                     })
-        ]
-      ),
-      body: FutureBuilder(
+    _children =_children = [
+            FutureBuilder(
         future: _canteensFuture,
         builder: (BuildContext context, AsyncSnapshot<List<Canteen>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -81,6 +62,53 @@ class _CanteenListPageState extends State<CanteenListPage> {
             );
           }
         },
+      )
+
+
+
+
+];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Canteen List'),
+        actions: [
+          IconButton(icon: const Icon(Icons.shopping_cart),
+                     tooltip: 'Open Cart',
+                     onPressed: (){
+                            if(!Get.find<OrderController>().cartEmpty()){
+
+                                Get.to(CartWidget());
+
+                            }
+                            else
+                            {
+                                Get.snackbar("", "Cart is Empty");
+                              
+                            }
+                     })
+        ]
+      ),
+      body: _children[currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.restaurant),
+            label: 'Canteens',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Orders',
+          ),
+        ],
+        onTap: (index){
+
+            setState((){ currentIndex = index;});
+
+        }, 
       ),
     );
   }
