@@ -30,7 +30,7 @@ class OrderCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),Text(
-              'Token No: ${ordcon.pastOrders.value[orderIndex].orderId}', //orderID for now
+              'Token No: ${ordcon.pastOrders.value[orderIndex].tokenNumber}', //orderID for now
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),

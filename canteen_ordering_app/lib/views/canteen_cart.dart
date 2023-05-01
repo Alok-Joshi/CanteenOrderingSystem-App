@@ -93,7 +93,9 @@ class _CartWidgetState extends State<CartWidget> {
                 onPressed: () async {
                   // TODO: Implement order functionality
                   await widget.ordcon.createOrder();
-                  Get.off(OrderSummaryPage());
+                  Get.snackbar("Success","Order placed successfully!");
+                  Navigator.pop(context);
+                  Navigator.pop(context);
                 },
                 child: Text('Place Order'),
               ),

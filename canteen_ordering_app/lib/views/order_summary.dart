@@ -20,7 +20,7 @@ class OrderSummaryPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Order ID: ${order.orderId}',
+              'Order Token: ${order.orderId}',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16),

@@ -5,6 +5,7 @@ import 'package:canteen_ordering_app/models/order.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:canteen_ordering_app/controllers/canteen_controller.dart';
+import 'package:flutter/material.dart';
 import 'dart:math';
 
 class OrderController extends GetxController {
@@ -18,6 +19,22 @@ class OrderController extends GetxController {
   RxList<CanteenOrder> pastOrders = <CanteenOrder>[].obs;
 
   Map<String, CanteenOrder> orderTracker = {};
+
+Future<int> findSmallestUnusedTokenNumber(String canteenId) async {
+  int tokenNumber = 1;
+  var querySnapshot = await _firestore
+      .collection('orders')
+      .where('canteen_id', isEqualTo: canteenId)
+      .get();
+
+  querySnapshot.docs.forEach((doc) {
+    if (doc.data()['token_number']  == tokenNumber) {
+      tokenNumber++;
+    }
+  });
+
+  return tokenNumber;
+}
 
 
  Stream<List<CanteenOrder>> pastOrderStream(){
@@ -83,15 +100,16 @@ class OrderController extends GetxController {
       return cartTracker[itemId]!.value;
 
   }
-  CanteenOrder getOrderObject(){
+  Future<CanteenOrder> getOrderObject() async {
 
       var user_id = authcon.userFromFirebase.value!.uid;
       var canteen_id = canteencon.currentCanteenID;
       var status = "Placed";
       var foodItems = cartTracker.values.where((element) => element.value>0).toList();
+      var token =  await findSmallestUnusedTokenNumber(canteen_id);
   
 
-      return CanteenOrder(userId: user_id, canteenId: canteen_id, status: status, foodItems: foodItems);
+      return CanteenOrder(userId: user_id, tokenNumber: token, canteenId: canteen_id, status: status, foodItems: foodItems);
 
 
   }
@@ -148,16 +166,14 @@ void clearState(){
 }
 Future createOrder() async {
 
-     CanteenOrder newOrder = getOrderObject();
+     CanteenOrder newOrder = await getOrderObject();
      DocumentReference ref = await _firestore.collection('orders').add(newOrder.toMap());
      newOrder.orderId = ref.id;
      orderTracker[ref.id] = newOrder;
-     //order placed successfully, now get the token
-     //newOrder.tokenNumber = await _firestore.collection('tokens').where(order_id == newOrder.orderId) commenting this out for now, cloud function not implemented yet
 
-     activeOrders.add(newOrder);
-     //get the current order
+
      clearState(); 
+
 
 }
 }

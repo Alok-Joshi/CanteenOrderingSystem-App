@@ -12,6 +12,7 @@ class CanteenOrder {
   CanteenOrder({
     this.orderId,
     this.userId,
+    this.tokenNumber,
     this.canteenId,
     this.foodItems,
     this.status,
@@ -28,6 +29,7 @@ class CanteenOrder {
     return CanteenOrder(
       orderId: doc.id,
       userId: data['user_id'] as String?,
+      tokenNumber:data['token_number'] as int?,
       canteenId: data['canteen_id'] as String?,
       foodItems: foodItems,
       status: data['status'] as String?,
@@ -38,6 +40,7 @@ class CanteenOrder {
     return {
       'user_id': userId,
       'canteen_id': canteenId,
+      'token_number':tokenNumber,
       'food_items': foodItems?.map((e) => {
             'menu_item': e.key.toMap(),
             'quantity': e.value,

@@ -111,7 +111,7 @@ class _CanteenListPageState extends State<CanteenListPage> {
         ),
       ),
       appBar: AppBar(
-        title: Text('Canteen List'),
+        
         actions: [
           IconButton(icon: const Icon(Icons.shopping_cart),
                      tooltip: 'Open Cart',
@@ -139,7 +139,7 @@ class _CanteenListPageState extends State<CanteenListPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
-            label: 'Orders',
+            label: 'Active Orders',
           ),
         ],
         onTap: (int index){
