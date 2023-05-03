@@ -20,18 +20,21 @@ class OrderController extends GetxController {
 
   Map<String, CanteenOrder> orderTracker = {};
 
-Future<int> findSmallestUnusedTokenNumber(String canteenId) async {
+Future<int> getToken(String canteenId) async {
   int tokenNumber = 1;
   var querySnapshot = await _firestore
       .collection('orders')
       .where('canteen_id', isEqualTo: canteenId)
+      .orderBy('token_number',descending: true)
+      .limit(1)
       .get();
 
-  querySnapshot.docs.forEach((doc) {
-    if (doc.data()['token_number']  == tokenNumber) {
-      tokenNumber++;
-    }
-  });
+  if(querySnapshot.size > 0){
+
+      tokenNumber += querySnapshot.docs.first.data()['token_number'] as int;
+
+  }
+  
 
   return tokenNumber;
 }
@@ -106,7 +109,7 @@ Future<int> findSmallestUnusedTokenNumber(String canteenId) async {
       var canteen_id = canteencon.currentCanteenID;
       var status = "Placed";
       var foodItems = cartTracker.values.where((element) => element.value>0).toList();
-      var token =  await findSmallestUnusedTokenNumber(canteen_id);
+      var token =  await getToken(canteen_id);
   
 
       return CanteenOrder(userId: user_id, tokenNumber: token, canteenId: canteen_id, status: status, foodItems: foodItems);
