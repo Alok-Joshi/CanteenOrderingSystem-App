@@ -85,7 +85,7 @@ class _CanteenListPageState extends State<CanteenListPage> {
           padding: EdgeInsets.zero,
           children:  <Widget>[
             UserAccountsDrawerHeader(
-              accountName: Text("Alok Joshi"), //TODO: replace by display name later (configure display name, authcon.userFromFirebase.value!.email
+              accountName: Text(""),//TODO: implement name for accounts drawer later
               accountEmail: Text(authcon.userFromFirebase.value!.email!),
               
               ),

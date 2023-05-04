@@ -60,7 +60,7 @@ class OrderCard extends StatelessWidget {
             ),
             SizedBox(height: 8.0),
             Text(
-              ' ₹${ordcon.getPrice(orderIndex)}', //TODO: write a method to get this detail later
+              ' ₹${ordcon.getPrice(orderIndex)}', 
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),

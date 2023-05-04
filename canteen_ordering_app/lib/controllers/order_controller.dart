@@ -52,7 +52,7 @@ int getPrice(int orderIndex){
  Stream<List<CanteenOrder>> pastOrderStream(){
 
     
-    var pastOrdersStream =_firestore.collection("orders").where("user_id",isEqualTo:authcon.userFromFirebase.value!.uid).where("status", whereIn: ["Completed"]).snapshots().map((event){
+    var pastOrdersStream =_firestore.collection("orders").where("user_id",isEqualTo:authcon.userFromFirebase.value!.uid).where("status", whereIn: ["Completed", "Cancelled"]).snapshots().map((event){
 
         return event.docs.map((e) => CanteenOrder.fromDocumentSnapshot(e),).toList();
 

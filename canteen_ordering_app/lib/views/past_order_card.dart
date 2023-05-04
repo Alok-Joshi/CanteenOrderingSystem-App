@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 class OrderCard extends StatelessWidget {
 
       final CanteenController cancon = Get.find<CanteenController>();
+      final OrderController ordcon = Get.find<OrderController>();
       int orderIndex;
 
   OrderCard({
@@ -19,8 +20,7 @@ class OrderCard extends StatelessWidget {
 
     var time = DateFormat('MMMM d h:mm a');
 
-    return GetX<OrderController>(
-    builder:(ordcon){ return Card(
+     return Card(
       elevation: 3.0,
       child: Padding(
         padding: EdgeInsets.all(16.0),
@@ -31,13 +31,13 @@ class OrderCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${cancon.canteenMap[ordcon.activeOrders.value[orderIndex].canteenId]!.canteenName}',
+                      '${cancon.canteenMap[ordcon.pastOrders.value[orderIndex].canteenId]!.canteenName}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      time.format(ordcon.activeOrders.value[orderIndex].creationTime!),
+                      time.format(ordcon.pastOrders.value[orderIndex].creationTime!),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -59,7 +59,7 @@ class OrderCard extends StatelessWidget {
             ),
             SizedBox(height: 8.0),
             Text(
-              ' ₹${0}', //TODO: write a method to get this detail later
+              ' ₹${ordcon.pastOrders.value[orderIndex].foodItems!.fold(0,(acc,entry) => acc + (entry.key.price! * entry.value))}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -82,18 +82,14 @@ class OrderCard extends StatelessWidget {
         ),
       ),
     );
-    },
-    );
   }
 
   Color _getStatusColor(status) {
     switch (status) {
-      case 'Placed':
-        return Colors.orange;
-      case 'In Progress':
-        return Colors.blue;
-      case 'Ready':
+      case 'Completed':
         return Colors.green;
+      case 'Cancelled':
+        return Colors.red;
       default:
         return Colors.black;
     }
