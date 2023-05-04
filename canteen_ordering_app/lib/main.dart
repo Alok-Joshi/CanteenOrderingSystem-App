@@ -23,7 +23,12 @@ class MyApp extends StatelessWidget {
       return GetMaterialApp(
       title: 'Ordering App',
       debugShowCheckedModeBanner: false,
-      home: LoginPage()
+      home: LoginPage(),
+      theme: ThemeData( primarySwatch: Colors.deepPurple,
+                        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple)
+      )
+    
+
     );
   }
 }

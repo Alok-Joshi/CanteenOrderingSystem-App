@@ -111,7 +111,7 @@ class _CanteenListPageState extends State<CanteenListPage> {
         ),
       ),
       appBar: AppBar(
-        
+        title: Text("VishwaFoodie",style: TextStyle(color:Colors.white),),
         actions: [
           IconButton(icon: const Icon(Icons.shopping_cart),
                      tooltip: 'Open Cart',
