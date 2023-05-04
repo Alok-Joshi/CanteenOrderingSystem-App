@@ -3,6 +3,7 @@ import 'package:canteen_ordering_app/models/order.dart';
 import 'package:canteen_ordering_app/controllers/order_controller.dart';
 import 'package:canteen_ordering_app/controllers/canteen_controller.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class OrderCard extends StatelessWidget {
 
@@ -15,6 +16,9 @@ class OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var time = DateFormat('MMMM d h:mm a');
+
     return GetX<OrderController>(
     builder:(ordcon){ return Card(
       elevation: 3.0,
@@ -23,13 +27,24 @@ class OrderCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '${cancon.canteenMap[ordcon.pastOrders.value[orderIndex].canteenId]!.canteenName}', //orderID for now
-
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),Text(
+            Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${cancon.canteenMap[ordcon.activeOrders.value[orderIndex].canteenId]!.canteenName}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      time.format(ordcon.activeOrders.value[orderIndex].creationTime!),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+          Text(
               'Token No: ${ordcon.pastOrders.value[orderIndex].tokenNumber}', //orderID for now
               style: TextStyle(
                 fontWeight: FontWeight.bold,

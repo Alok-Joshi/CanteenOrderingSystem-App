@@ -39,7 +39,16 @@ Future<int> getToken(String canteenId) async {
   return tokenNumber;
 }
 
+int getPrice(int orderIndex){
 
+
+      int totalCost = activeOrders[orderIndex].foodItems!.fold(0, (acc,entry) => acc + (entry.key.price! * entry.value));
+
+
+      return totalCost;
+
+
+}
  Stream<List<CanteenOrder>> pastOrderStream(){
 
     
@@ -110,9 +119,10 @@ Future<int> getToken(String canteenId) async {
       var status = "Placed";
       var foodItems = cartTracker.values.where((element) => element.value>0).toList();
       var token =  await getToken(canteen_id);
+      var time = DateTime.now();
   
 
-      return CanteenOrder(userId: user_id, tokenNumber: token, canteenId: canteen_id, status: status, foodItems: foodItems);
+      return CanteenOrder(userId: user_id, tokenNumber: token, canteenId: canteen_id, status: status, foodItems: foodItems, creationTime:time);
 
 
   }

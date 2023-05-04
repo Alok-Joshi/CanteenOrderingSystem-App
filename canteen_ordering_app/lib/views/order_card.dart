@@ -3,6 +3,7 @@ import 'package:canteen_ordering_app/models/order.dart';
 import 'package:canteen_ordering_app/controllers/order_controller.dart';
 import 'package:canteen_ordering_app/controllers/canteen_controller.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class OrderCard extends StatelessWidget {
 
@@ -15,6 +16,9 @@ class OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var time = DateFormat("HH:mm");
+
     return GetX<OrderController>(
     builder:(ordcon){ return Card(
       elevation: 3.0,
@@ -23,13 +27,25 @@ class OrderCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${cancon.canteenMap[ordcon.activeOrders.value[orderIndex].canteenId]!.canteenName}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      time.format(ordcon.activeOrders.value[orderIndex].creationTime!),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+            
             Text(
-              '${cancon.canteenMap[ordcon.activeOrders.value[orderIndex].canteenId]!.canteenName}', //orderID for now
-
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),Text(
               'Token No: ${ordcon.activeOrders.value[orderIndex].tokenNumber}', //orderID for now
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -44,7 +60,7 @@ class OrderCard extends StatelessWidget {
             ),
             SizedBox(height: 8.0),
             Text(
-              ' ₹${0}', //TODO: write a method to get this detail later
+              ' ₹${ordcon.getPrice(orderIndex)}', //TODO: write a method to get this detail later
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
